@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -17,12 +19,25 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authz) -> authz
-                        //.requestMatchers("/hola").permitAll()   /*Peticiones permitidas sin loguearse, métodos públicos*/
+                        .requestMatchers("/hola").permitAll()   /*Peticiones permitidas sin loguearse, métodos públicos*/
                         .anyRequest().authenticated()   /*Todas las peticiones tienen que estar autenticadas*/
                 )
                 .httpBasic(withDefaults());
         return http.build();
     }
+
+    /**
+     *
+     * Para permitir ciertos caracteres especiales en la URL
+     */
+    @Bean
+    public HttpFirewall looseHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowBackSlash(true);
+        firewall.setAllowSemicolon(true);
+        return firewall;
+    }
+
 
     /**
      * Metodo para usuarios y roles en memoria, también puede probarse desde
@@ -33,7 +48,7 @@ public class WebSecurityConfig {
         UserDetails user = User.withDefaultPasswordEncoder()
                 .username("user")
                 .password("password")
-                .roles("USER")
+                .roles("USER","ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
