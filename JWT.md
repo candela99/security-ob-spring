@@ -82,7 +82,7 @@ Crear un proyecto Spring Boot con:
   * Swagger
   * Dependencia JWT (se añade manualmente en el pom.xml)
   ```xml
-    <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
+     <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
     <dependency>
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt-api</artifactId>
